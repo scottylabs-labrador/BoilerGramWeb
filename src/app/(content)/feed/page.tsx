@@ -1,55 +1,57 @@
 "use client";
-import { getFeed } from "~/lib/api/getFeed";
+import Details from "~/components/Details";
+import groupDetails from "~/types";
+import React, { useEffect, useState } from "react";
+import { db } from "~/lib/api/firebaseConfig";
+import { collection, query, onSnapshot } from "firebase/firestore";
 import { useUser } from "@clerk/nextjs";
-import { useEffect, useRef, useState } from "react";
-import PostCard  from "~/components/PostCard";
-import { Photo } from "~/types";
 
 export default function FeedPage() {
+  const [groups, setGroups] = useState<any[]>([]);
   const { user } = useUser();
-  const [photos, setPhotos] = useState<Photo[]>([]);
-  const [isScrollNearBottom, setIsScrollNearBottom] = useState(false);
-  const lastPhoto = useRef<string | null>(null);
-
-  // This lazily loads the photos, avoiding lag.
-  function onScroll(e: React.UIEvent<HTMLDivElement>) {
-    const target = e.target as HTMLDivElement;
-    if (target.scrollHeight - target.scrollTop <= 2 * target.clientHeight) {
-      setIsScrollNearBottom(true);
-    } else {
-      setIsScrollNearBottom(false);
-    }
-  }
-
+  
   useEffect(() => {
-    if (photos.length && !isScrollNearBottom) {
-      return;
-    }
-    const loadPhotos = async () => {
-      if (user) {
-        // We know this is safe because we check if the user is signed in
-        const [paginatedPhotos, lastSnapshot] = await getFeed(user?.emailAddresses[0]?.emailAddress as string, lastPhoto.current, 5);
-        lastPhoto.current = lastSnapshot || null;
-        setPhotos([...photos, ...paginatedPhotos]);
-      }
-    };
+    if (!user) return;
+    const userId = user?.emailAddresses[0]?.emailAddress;
+    const classesRef = collection(db, "Study Groups");
+    const q = query(classesRef);
 
-    loadPhotos();
-  }, [user, isScrollNearBottom]);
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const groups = querySnapshot.docs.map((doc) => ({
+        ...doc.data(),
+      }));
+      setGroups(groups);
+    }, (error) => {
+      console.error('Error getting documents: ', error);
+    });
 
-  const photoCards = photos.map((photo) => (
-    photo && <></> // What should go here?  How do we render a post card?
-  ))
+    return () => unsubscribe();
+  }, [user]);
+
+  const [showDetails, setShowDetails] = useState<groupDetails | null>(null);
+
+  const displayScheduled = groups.map((group) => (
+    <div className="max-w-sm overflow-hidden rounded bg-white shadow-lg cursor-pointer px-6 py-4" onClick={() => setShowDetails(group)}>
+        <div className="mb-2 text-xl font-bold">{group.title}</div>
+        <ul>
+          <li>{group.course}</li>
+          <li>{group.time}</li>
+          <li>{group.location}</li>
+        </ul>
+    </div>
+  ));
 
   return (
-    <main className="container relative overflow-scroll h-screen" onScroll={onScroll}>
-      <p className="text-4xl text-white font-bold pt-4 text-center">Feed</p>
-      <div className="container flex flex-col items-center justify-center gap-12 py-[1rem]">
-        <div className="grid grid-cols-1">
-          {photoCards}
+    <main className="container relative h-screen">
+      <div className={`${showDetails ? 'w-[60%]' : 'w-[100%]'}`}>
+        <div className="mb-4 border-b dark:border-gray-700">
+            <p className="inline-block rounded-t-lg border-b-2 px-4 py-4 text-sm text-white ">Scheduled</p>
+        </div>
+          <div className={`${showDetails ? 'grid grid-cols-2 gap-4' : 'grid grid-cols-3 gap-5'}`}>{displayScheduled}</div>
+        <div>
+          {<Details details={showDetails!} onClick={() => setShowDetails(null)}></Details>}
         </div>
       </div>
-      <p className="text-white text-sm font-bold">Stop scrolling, it's bad for you!!</p>
     </main>
   );
 }
