@@ -1,29 +1,95 @@
-# Create T3 App
+# CMU_Research
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+## Overview
+CMU_Research is an advanced web-based platform designed to centralize and streamline research opportunities at Carnegie Mellon University. By leveraging automated web scraping and structured data integration, the platform dynamically aggregates research postings from CMU department websites, spreadsheets, and other faculty-curated repositories. This ensures that students have access to the most up-to-date opportunities while minimizing the manual effort required from faculty and administrators.
 
-## What's next? How do I make an app with this?
+## Contributors
+Team Leads: Rishi Prabhu, Jarrett Huang, Jennifer Zhu, Lily Qin, Bryan Huang
+CMU Scotty Labs Labrador Software Engineers
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+## How to Run the Code
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### **Step 1: Get the Code**
+1. Consult with the Team (**Rishi, Jarrett, or Jennifer**) on the status of the Git codebase.
+2. Pull the latest code from the GitHub repository to your local machine.
 
-## Learn More
+### Pulling from Github Main Branch
+Run this command in your terminal while being in the ResearchStarter Folder
+```sh
+git pull origin main
+```
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### **Step 2: Setup and Run the Development Server**
+Open a terminal in **VS Code** or your system terminal and execute the following commands:
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+```sh
+# Navigate to the project directory
+cd ResearchStarter
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+# Install dependencies
+npm install
 
-## How do I deploy this?
+# Start JSON server for student data
+npx json-server src/studentdata.json --port 5001
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+# Start development server
+npm run dev
+
+Step 3: Start the Application Server
+Open another terminal and run:
+
+# Start the application server
+npm run server
+
+```
+
+## Core Features
+- **Automated Web Scraping & Data Aggregation**
+  - Crawls department websites, research databases, and spreadsheets for real-time updates.
+  - Parses and structures data for seamless presentation within the platform.
+  
+- **Research Opportunity Portal**
+  - Enables professors to post research openings with specific requirements.
+  - Students can browse, filter, and apply to opportunities based on interest and qualifications.
+  
+- **Seamless Student-Professor Interaction**
+  - Direct messaging system for streamlined communication.
+  - Professors can manage applications and connect with potential candidates.
+
+- **Data Synchronization & Validation**
+  - Incorporates input from 62 department heads to ensure comprehensive research listings.
+  - Merges faculty-managed spreadsheets with automatically scraped content.
+
+## Technical Architecture
+### **Frontend**
+- **Framework:** React with TypeScript for type safety and scalable UI components.
+- **Styling:** Tailwind CSS for modern, responsive, and efficient styling.
+- **State Management:** Context API for lightweight global state handling.
+- **UI Enhancements:** Dynamic filtering, real-time search, and accessibility-focused design.
+
+### **Backend & Data Processing**
+- **Web Scraper:** JavaScript-based scraping pipeline with structured JSON output.
+- **Data Processing:** Intelligent parsing and deduplication to merge multiple sources.
+- **API Layer:** RESTful API endpoints for fetching, updating, and managing research listings.
+
+### **Storage & Integration**
+- **JSON Data Layer:** Storing structured data for fast and lightweight retrieval.
+- **Cloud Deployment (Planned):** Future scalability with cloud-based hosting and database integration.
+
+## Roadmap & Future Enhancements
+- **AI-Powered Matching System** – Implementing machine learning models to recommend research opportunities based on student profiles and interests.
+- **Professor Dashboard Enhancements** – Improved analytics and opportunity management tools.
+- **Expanded Data Sources** – Incorporating additional research databases and funding opportunities.
+
+## Tech Stack
+- **Frontend:** JavaScript, TypeScript, React, Tailwind CSS, HTML, CSS
+- **Backend:** Express, NodeJS
+- **Database:** MongoDB
+- **Data Handling:** JSON, Web Scraping with JavaScript/AI
+
+## Contributors
+Developed by a team dedicated to making research opportunities more accessible and efficient at Carnegie Mellon University.
+
+---
+**CMU_Research: Empowering students and faculty through seamless research discovery.**

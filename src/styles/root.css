@@ -1,0 +1,9 @@
+@config "../../tailwind.config.js";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --light-color: #d9d9d9;
+  --dark-color: #b9b9b9;
+}
